@@ -24,7 +24,9 @@ $(document).ready(function(){
         let turn = $('#turn').html();
         if ($(this).hasClass(turn)) {
             $('.selected').removeClass("selected");
-        $(this).addClass("selected");
+            selected = $(this);
+            moveChecker();
+            $(this).addClass("selected");
         }
     });
     // cannot put multiple pieces into a square
@@ -48,4 +50,14 @@ function changeTurn() {
     } else {
         $("#turn").html("ERROR");
     }
+}
+
+function moveChecker() {
+    //doesn't move the checker, rather it checks if the ckecker can move there
+    // does this piece have squares it can move to?
+    //highlight possible locations
+    let prow = parseInt(selected.parent().attr("id")[0]);
+    let pcol = parseInt(selected.parent().attr("id")[1]);
+
+    $(`#${prow + 1}${pcol - 1}`).addClass('selected');
 }
