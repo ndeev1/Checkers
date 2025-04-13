@@ -1,3 +1,4 @@
+var selected;
 $(document).ready(function(){
     
     // create the board
@@ -24,13 +25,15 @@ $(document).ready(function(){
         let turn = $('#turn').html();
         if ($(this).hasClass(turn)) {
             $('.selected').removeClass("selected");
-        $(this).addClass("selected");
+            selected = $(this);
+            moveChecker();
+            $(this).addClass("selected");
         }
     });
     // cannot put multiple pieces into a square
     $('.square.red').on("click", function(){
         if ( $('.selected').length > 0 && $(this).children().length == 0) {
-            $(this).append( $('.selected') );
+            $(this).append( $(selected) );
             $('.selected').removeClass("selected");
             changeTurn()
         }
@@ -48,4 +51,24 @@ function changeTurn() {
     } else {
         $("#turn").html("ERROR");
     }
+}
+
+function moveChecker() {
+    /*
+    doesn't move the checker, rather it checks if the ckecker can move there
+    does this piece have squares it can move to?
+    highlight possible locations
+    */
+    //turnary conditional
+    let t = $("#turn").html()[0] == "b" ? 1 : -1;
+    let prow = parseInt(selected.parent().attr("id")[0]);
+    let pcol = parseInt(selected.parent().attr("id")[1]);
+
+    if ($`#${prow + t}${pcol - 1}`.children().length == 0) {
+        $(`#${prow + t}${pcol - 1}`).addClass('selected');
+    }
+    if ($`#${prow + t}${pcol + 1}`.children().length == 0) {
+        $(`#${prow + t}${pcol + 1}`).addClass('selected');
+    }
+
 }
