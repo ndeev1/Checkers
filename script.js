@@ -1,6 +1,5 @@
 var selected;
 $(document).ready(function(){
-    
     // create the board
     for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
@@ -32,10 +31,16 @@ $(document).ready(function(){
     });
     // cannot put multiple pieces into a square
     $('.square.red').on("click", function(){
-        if ( $('.selected').length > 0 && $(this).children().length == 0) {
-            $(this).append( $(selected) );
+        if (
+            selected != undefined && 
+            selected.length > 0 && 
+            $(this).children().length == 0 && 
+            $(this).hasClass('selected')
+        ) {
+            $(this).append( selected );
             $('.selected').removeClass("selected");
-            changeTurn()
+            selected = undefined;
+            changeTurn();
         }
     });
 })
@@ -64,11 +69,24 @@ function moveChecker() {
     let prow = parseInt(selected.parent().attr("id")[0]);
     let pcol = parseInt(selected.parent().attr("id")[1]);
 
-    if ($`#${prow + t}${pcol - 1}`.children().length == 0) {
+    if ($(`#${prow + t}${pcol - 1}`).children().length == 0) {
         $(`#${prow + t}${pcol - 1}`).addClass('selected');
+    }else if ( ! $(`#${prow + t}${pcol - 1}`).children().hasClass($('turn').html())) {
+        if ($(`#${prow + (t * 2)}${pcol - 2}`).children().length == 0) {
+            $(`#${prow + (t * 2)}${pcol - 2}`).addClass('selected');
+        }
     }
-    if ($`#${prow + t}${pcol + 1}`.children().length == 0) {
+    if ($(`#${prow + t}${pcol + 1}`).children().length == 0) {
         $(`#${prow + t}${pcol + 1}`).addClass('selected');
+    } else if ( ! $(`#${prow + t}${pcol + 1}`).children().hasClass($('turn').html())){
+        if ($(`#${prow + (t * 2)}${pcol + 2}`).children().length == 0) {
+            $(`#${prow + (t * 2)}${pcol + 2}`).addClass('selected');
+        }
     }
 
+    if ( $('.selected').length > 0) {
+        selected.addClass('selected');
+    } else {
+        selected = undefined;
+    }
 }
