@@ -12,6 +12,15 @@ body {
     line-height: 0;
 }
 
+#score {
+    width: 515px;
+    height: 100px;
+    background-color: #1A2B2B;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+}
+
 .square {
     width: calc(12.5% - 6px);
     height: calc(12.5% - 6px);
@@ -66,4 +75,8 @@ span {
     align-items: center;
     justify-content: center;
     gap: 20px;
+}
+
+.king {
+    border: 2px ;
 }
