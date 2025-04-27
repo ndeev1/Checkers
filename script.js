@@ -39,6 +39,20 @@ $(document).ready(function(){
         ) {
             $(this).append( selected );
             $('.selected').removeClass("selected");
+            console.log($(this).hasClass('jump'));
+            if ($(this).hasClass('jump')) {
+                //how to move a piece, where to move it, which piece to move
+                let t = $("#turn").html()[0] == "b" ? -1 : 1;
+                let jrow = parseInt($(this).attr('id')[0]);
+                let jcol = -1;
+                if ($(this).hasClass('jump-left')) {
+                    jcol = parseInt($(this).attr('id')[1]) + 1;
+                } else if ($(this).hasClass('jump-right')) {
+                    jcol = parseInt($(this).attr('id')[1]) - 1;
+                }
+                let PIECE = $(`#${jrow}${jcol}`).children();
+                $('#score').append(PIECE);
+            }
             selected = undefined;
             changeTurn();
         }
@@ -74,6 +88,8 @@ function moveChecker() {
     }else if ( ! $(`#${prow + t}${pcol - 1}`).children().hasClass($('turn').html())) {
         if ($(`#${prow + (t * 2)}${pcol - 2}`).children().length == 0) {
             $(`#${prow + (t * 2)}${pcol - 2}`).addClass('selected');
+            $(`#${prow + (t * 2)}${pcol - 2}`).addClass('jump');
+            $(`#${prow + (t * 2)}${pcol - 2}`).addClass('jump-left');
         }
     }
     if ($(`#${prow + t}${pcol + 1}`).children().length == 0) {
@@ -81,6 +97,8 @@ function moveChecker() {
     } else if ( ! $(`#${prow + t}${pcol + 1}`).children().hasClass($('turn').html())){
         if ($(`#${prow + (t * 2)}${pcol + 2}`).children().length == 0) {
             $(`#${prow + (t * 2)}${pcol + 2}`).addClass('selected');
+            $(`#${prow + (t * 2)}${pcol + 2}`).addClass('jump');
+            $(`#${prow + (t * 2)}${pcol + 2}`).addClass('jump-right');
         }
     }
 
