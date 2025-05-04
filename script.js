@@ -52,6 +52,13 @@ $(document).ready(function(){
                 }
                 let PIECE = $(`#${jrow}${jcol}`).children();
                 $('#score').append(PIECE);
+                $(".jump-right").removeClass("jump-right");
+                $(".jump-left").removeClass("jump-left");
+                $(".jump").removeClass("jump");
+            }
+            if ( ($('#turn').html() == "black" && parseInt($(this).attr('id')[0]) == 7) ||
+            ($('#turn').html() == "white" && parseInt($(this).attr('id')[0]) == 0)) {
+                selected.addClass("king");
             }
             selected = undefined;
             changeTurn();
@@ -87,20 +94,34 @@ function moveChecker() {
         $(`#${prow + t}${pcol - 1}`).addClass('selected');
     }else if ( ! $(`#${prow + t}${pcol - 1}`).children().hasClass($('turn').html())) {
         if ($(`#${prow + (t * 2)}${pcol - 2}`).children().length == 0) {
-            $(`#${prow + (t * 2)}${pcol - 2}`).addClass('selected');
-            $(`#${prow + (t * 2)}${pcol - 2}`).addClass('jump');
-            $(`#${prow + (t * 2)}${pcol - 2}`).addClass('jump-left');
+            $(`#${prow + (t * 2)}${pcol - 2}`).addClass('selected jump jump-left');
         }
     }
     if ($(`#${prow + t}${pcol + 1}`).children().length == 0) {
         $(`#${prow + t}${pcol + 1}`).addClass('selected');
     } else if ( ! $(`#${prow + t}${pcol + 1}`).children().hasClass($('turn').html())){
         if ($(`#${prow + (t * 2)}${pcol + 2}`).children().length == 0) {
-            $(`#${prow + (t * 2)}${pcol + 2}`).addClass('selected');
-            $(`#${prow + (t * 2)}${pcol + 2}`).addClass('jump');
-            $(`#${prow + (t * 2)}${pcol + 2}`).addClass('jump-right');
+            $(`#${prow + (t * 2)}${pcol + 2}`).addClass('selected jump jump-right');
         }
     }
+
+    //backward moves for kings
+    /*if selected.hasClass("king") {
+        if ($(`#${prow - t}${pcol - 1}`).children().length == 0) {
+            $(`#${prow - t}${pcol - 1}`).addClass('selected');
+        }else if ( ! $(`#${prow + t}${pcol - 1}`).children().hasClass($('turn').html())) {
+            if ($(`#${prow - (t * 2)}${pcol - 2}`).children().length == 0) {
+                $(`#${prow - (t * 2)}${pcol - 2}`).addClass('selected jump jump-back-left');
+            }
+        }
+        if ($(`#${prow - t}${pcol + 1}`).children().length == 0) {
+            $(`#${prow - t}${pcol + 1}`).addClass('selected');
+        } else if ( ! $(`#${prow + t}${pcol + 1}`).children().hasClass($('turn').html())){
+            if ($(`#${prow + (t * 2)}${pcol + 2}`).children().length == 0) {
+                $(`#${prow + (t * 2)}${pcol + 2}`).addClass('selected jump jump-back-right');
+            }
+        }
+    }*/
 
     if ( $('.selected').length > 0) {
         selected.addClass('selected');
