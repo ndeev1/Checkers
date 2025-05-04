@@ -1,6 +1,7 @@
 body {
     background-color: #123456;
-    text-align: center;
+    align-items: center;
+    justify-content: center;
     font-family: Arial, Helvetica, sans-serif;
     color: #FFF;
 }
@@ -76,7 +77,6 @@ span {
     justify-content: center;
     gap: 20px;
 }
-
 .king {
-    border: 2px ;
+    border: 3px solid #CC0;
 }
