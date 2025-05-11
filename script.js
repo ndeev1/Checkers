@@ -14,7 +14,7 @@ $(document).ready(function(){
                 if ( r < 3 ) {
                     $(`#${r}${c}`).append("<div class='piece black'></div>")
                 } else if ( r > 4 ) {
-                    $(`#${r}${c}`).append("<div class='piece white'></div>")
+                    $(`#${r}${c}`).append("<div class='piece white king'></div>")
                 }
             }
         }
@@ -25,7 +25,12 @@ $(document).ready(function(){
         if ($(this).hasClass(turn)) {
             $('.selected').removeClass("selected");
             selected = $(this);
-            moveChecker();
+            tryMoves(1, -1, 'jump-left');
+            tryMoves(1, 1, 'jump-right');
+            if (selected.hasClass('king')) {
+                tryMoves(-1, -1, 'jump-back-left');
+                tryMoves(-1, 1, 'jump-back-right');
+            }
             $(this).addClass("selected");
         }
     });
@@ -55,6 +60,8 @@ $(document).ready(function(){
                 $(".jump-right").removeClass("jump-right");
                 $(".jump-left").removeClass("jump-left");
                 $(".jump").removeClass("jump");
+                $(".jump-back-right").removeClass("jump-back-right");
+                $(".jump-back-left").removeClass("jump-back-left");
             }
             if ( ($('#turn').html() == "black" && parseInt($(this).attr('id')[0]) == 7) ||
             ($('#turn').html() == "white" && parseInt($(this).attr('id')[0]) == 0)) {
@@ -79,53 +86,32 @@ function changeTurn() {
     }
 }
 
-function moveChecker() {
+function tryMoves(row, col, jumpClass) {
     /*
-    doesn't move the checker, rather it checks if the ckecker can move there
     does this piece have squares it can move to?
     highlight possible locations
     */
+
     //turnary conditional
     let t = $("#turn").html()[0] == "b" ? 1 : -1;
+
     let prow = parseInt(selected.parent().attr("id")[0]);
     let pcol = parseInt(selected.parent().attr("id")[1]);
+    const corner = $(`#${prow + t*row}${pcol + t*col}`);
+    const jumpCorner = $(`#${prow + t*2*row}${pcol + t*2*col}`);
 
-    if ($(`#${prow + t}${pcol - 1}`).children().length == 0) {
-        $(`#${prow + t}${pcol - 1}`).addClass('selected');
-    }else if ( ! $(`#${prow + t}${pcol - 1}`).children().hasClass($('turn').html())) {
-        if ($(`#${prow + (t * 2)}${pcol - 2}`).children().length == 0) {
-            $(`#${prow + (t * 2)}${pcol - 2}`).addClass('selected jump jump-left');
-        }
-    }
-    if ($(`#${prow + t}${pcol + 1}`).children().length == 0) {
-        $(`#${prow + t}${pcol + 1}`).addClass('selected');
-    } else if ( ! $(`#${prow + t}${pcol + 1}`).children().hasClass($('turn').html())){
-        if ($(`#${prow + (t * 2)}${pcol + 2}`).children().length == 0) {
-            $(`#${prow + (t * 2)}${pcol + 2}`).addClass('selected jump jump-right');
-        }
+    //regular move
+    if (corner.children().length == 0) {
+        corner.addClass('selected');
     }
 
-    //backward moves for kings
-    /*if selected.hasClass("king") {
-        if ($(`#${prow - t}${pcol - 1}`).children().length == 0) {
-            $(`#${prow - t}${pcol - 1}`).addClass('selected');
-        }else if ( ! $(`#${prow + t}${pcol - 1}`).children().hasClass($('turn').html())) {
-            if ($(`#${prow - (t * 2)}${pcol - 2}`).children().length == 0) {
-                $(`#${prow - (t * 2)}${pcol - 2}`).addClass('selected jump jump-back-left');
-            }
-        }
-        if ($(`#${prow - t}${pcol + 1}`).children().length == 0) {
-            $(`#${prow - t}${pcol + 1}`).addClass('selected');
-        } else if ( ! $(`#${prow + t}${pcol + 1}`).children().hasClass($('turn').html())){
-            if ($(`#${prow + (t * 2)}${pcol + 2}`).children().length == 0) {
-                $(`#${prow + (t * 2)}${pcol + 2}`).addClass('selected jump jump-back-right');
-            }
-        }
-    }*/
-
-    if ( $('.selected').length > 0) {
-        selected.addClass('selected');
-    } else {
-        selected = undefined;
+    //jumps
+    if (
+        corner.children().length == 1 && 
+        (! corner.children().hasClass($("#turn").html())) &&
+        jumpCorner.children().length == 0
+    ) {
+        jumpCorner.addClass('selected jump');
+        jumpCorner.addClass(jumpClass);
     }
 }
